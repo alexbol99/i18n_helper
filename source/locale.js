@@ -1,6 +1,4 @@
 
-import { Parse } from '../lib/parse-1.6.7.min';
-
 export var LocaleView = React.createClass({
     getInitialState: function() {
         return ({
@@ -9,10 +7,12 @@ export var LocaleView = React.createClass({
     render: function() {
         return (
             <div>
-                {Object.keys(this.props.locale).map(
-                        section =>
-                        (<h3 key={section}>{section}</h3>)
-                )}
+                <ReactBootstrap.PanelGroup defaultActiveKey="2" accordion>
+                    {Object.keys(this.props.locale).map(
+                            section =>
+                            <ReactBootstrap.Panel key={section} header={section} eventKey={section}>Content</ReactBootstrap.Panel>
+                    )}
+                </ReactBootstrap.PanelGroup>
             </div>
 
         );

@@ -1,0 +1,181 @@
+{
+	"app" : {
+		"title": "IDB Graphic Viewer",
+		"connection-please-wait-message" :  "Please wait while establish connection with the server",
+		"connection-succeed-message" :  "All Good!\n You can now keep working!",
+		"connection-failed-message" : "Oh oh! It seems there is some connection problem. hold on, I'm trying to fix it...",
+		"connection-failed-to-establish-message" : "Connection failed",
+		"before-unload-message" : "You are about to exit the Viewer.",
+		"auto-logout-ok-button" : "Logout now",
+		"auto-logout-cancel-button" :  "Stay logged in",
+		"auto-logout-countdown-message" :  "Logout will occur in: %{counter}",
+		"logout-succeed-message" : "Logged Out. <br>For log-in again please refresh the page.",
+		"logout-failed-message" : "Logout failed!",
+		"log-link" : "Backend server log",
+		"errors-title" : "Error",
+		"inch" :  "inch",
+		"mm" :  "mm"
+	},
+	"header" :  {
+		"logo-title" :  "About IDB Graphic Viewer",
+		"jobname-placeholder" : "Select Job",
+		"toolbar" :  {
+			"open-job-tooltip" :  "Select Job",
+			"zoom-area-tooltip" :  "Zoom Area",
+			"measure-between-points-tooltip" : "Measure between Points",
+			"measure-annular-ring-tooltip" : "Measure Annular Ring",
+			"measure-between-features-tooltip" : "Measure between Features",
+			"measure-between-ceneters-tooltip" : "Measure between Centers",
+			"measure-between-profiles-tooltip" : "Measure between Profiles",
+			"units-tooltip" : "Change Units",
+			"highlight-feature-tooltip" : "Highlight Feature",
+			"negative-toggle-tooltip" : "Display Negative Features",
+			"width-toggle-off-tooltip" : "Width Off",
+			"width-toggle-on-tooltip" : "Width On",
+			"center-to-xy-placeholder" : "Center to X,Y",
+			"pan-to-coordinate-tooltip" :  "Pan to Coordinate",
+			"settings-tooltip" : "Settings",
+			"language-tooltip" :  "Change Language",
+			"view-log-tooltip" : "View Server Log",
+			"help-tooltip" :  "Help",
+			"about-tooltip" :  "About IDB Graphic Viewer",
+			"locale-tooltip" : "Languages",
+			"upload-license-file-tooltip" :  "Upload License File"
+		}
+	},
+	"graphics-section" :  {
+		"zoom-home-tooltip" :  "Zoom Home",
+		"zoom-back-tooltip" :  "Zoom Back",
+		"zoom-in-tooltip" :  "Zoom In",
+		"zoom-out-tooltip" :  "Zoom Out",
+		"canvas-not_supported" :  "Browser does not support canvas element",
+		"illegal-coordinates-message" : "Illegal coordinates input",
+		"coordinates-out-of-limits-message" : "One of requested image coordinates",
+		"legal-coordinates-interval-message" :  "is out of legal interval from %{min_coord} to %{max_coord} %{units}",
+		"job-not-open-message" : "Job is not open"
+	},
+	"open-job-widget" : {
+		"title" :  "Location",
+		"search-placeholder" :  "Search",
+		"browse-button" :  "Browse...",
+		"add-location-button" : "Add",
+		"add-location-button-tooltip" : "Add Database Location",
+		"delete-location-button" : "Delete",
+		"delete-location-button-tooltip" : "Delete Database Location"
+	},
+	"histogram-widget": {
+		"title" :  "Features Histogram",
+		"layer" :  "Layer",
+		"All" :  "All",
+		"Line" : "Line",
+		"Pad" : "Pad",
+		"Arc" : "Arc",
+		"Surface" : "Surface",
+		"Text" : "Text",
+		"Positive" : "Positive",
+		"Negative" : "Negative"
+	},
+	"side-section" : {
+		"board-layers-title" : "Board Layers",
+		"misc-layers-title" :  "Misc Layers",
+		"substeps-title" :  "SubSteps"
+	},
+	"feature-info-widget" :  {
+		"title" : "Feature Info",
+		"attributes" : "Attributes",
+		"no-attributes" :  "No Attributes",
+		"num-features" :  "Num of features: ",
+		"step" :  "Step",
+		"layer" : "Layer",
+		"nf" : "#",
+		"pol" : "Polarity",
+		"type" : "Type",
+		"symbol" : "Symbol",
+		"mirror" : "Mirror",
+		"angle" : "Angle",
+		"length" : "Length",
+		"diam" : "Diameter",
+		"cw" : "Clockwise",
+		"string" : "String",
+		"font" : "Font",
+		"sizeX" : "Size X",
+		"sizeY" : "Size Y",
+		"width" : "Width",
+		"islands" : "Islands",
+		"holes" : "Holes",
+		"edges" : "Edges",
+		"name" : "Name",
+		"val" : "Value",
+		"pad" : "pad",
+		"line" : "line",
+		"arc" : "arc",
+		"text" : "text",
+		"surface" : "surface"
+	},
+	"submit-license-widget" :  {
+		"title" : "Submit License File",
+		"input-file-label" :  "Choose license file from location on the disc",
+		"agreement-accepted-label" : "I accept the terms in the license agreement",
+		"submit-button" : "Submit",
+		"success-message" : "",
+		"error-message" : ""
+	},
+	"about-dialog" :  {
+		"title" : "About IDB Graphics Viewer",
+		"version-label": "Version",
+		"platform-label": "Platform",
+		"lic-server-version": "License Server Version",
+		"dongle-id-label":  "Dongle ID",
+		"license-table": {
+			"title": "Available Licenses",
+			"quantity": "Quantity",
+			"days-to-expiration": "Days to expiration",
+			"quantity-in-use": "In Use",
+			"type": {
+				"hdr": "Type",
+				"perm": "Permanent",
+				"eval": "Evaluation",
+				"loan": "Loan",
+				"temporary": "Temporary"
+			}
+		}
+	},
+	"license-usage-widget": { 
+		"usage-title": "Licenses in use",
+		"usage-client": "Client",
+		"usage-count":  "Count"
+	},
+	"license-expire-widget" :  {
+		"message": "License is about to expire.<br><br>Days to expiration:"
+	},
+	"add-location-dialog" : {
+		"title": "Add Database Location",
+		"input-location-path-label": "Path to Database",
+		"input-location-name-label": "Database Name",
+		"submit-button": "Submit"
+	},
+	"errors" :  {
+		"1055002" : "Bad URI",
+		"1055003" : "Location does not exist",
+		"1055004" : "Job does not exist",
+		"1055005" : "Step does not exist",
+		"1055006" : "Layer does not exist",
+		"1055007" : "Parameter not specified",
+		"1055008" : "Bad parameter value",
+		"1055009" : "Request aborted",
+		"1055010" : "Illegal job format - only IDB is allowed",
+		"1055011" : "File not found",
+		"1055012" : "Failed to open file",
+		"1055101" : "Unable to create path",
+		"1055102" : "Failed to start up backend server",
+		"1055103" : "Failed to connect to backend server",
+		"1055104" : "Failed to upload job",
+		"1056002" : "Bad URI",
+		"171002"  : "Bad license file",
+		"171004"  : "License option does not exist",
+		"171005"  : "License file does not exist",
+		"282003"  : "License has expired",
+		"282004"  : "Warning: License runs out in less than 30 days",
+		"282007"  : "Maximum number of instances exceeded"
+	}
+}
