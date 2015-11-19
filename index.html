@@ -2,13 +2,15 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
-    <script src="lib/parse-1.6.7.min.js"></script>
+    <title>IDB Viewer Multilangauage Support</title>
+    <!--<script src="lib/parse-1.6.7.min.js"></script>-->
+    <!--<script src="lib/react-with-addons.min.js"></script>-->
+    <!--<script src="lib/react-dom.min.js"></script>-->
+    <script src="lib/react.js"></script>
+    <script src="lib/react-dom.js"></script>
 </head>
 <body>
-    <script>
-        /* "application id", "javascript key" */
-        Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
-    </script>
+    <div id="app"></div>
+    <script data-main="out/main.js" src="lib/require.js"></script>
 </body>
 </html>

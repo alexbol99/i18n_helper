@@ -1,0 +1,1 @@
+babel --modules amd source -d out
