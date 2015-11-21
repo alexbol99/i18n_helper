@@ -7,7 +7,7 @@ import { App } from 'app';
 
 Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
 
-React.render(
+ReactDOM.render(
   <App />,
   document.getElementById('app')
 );

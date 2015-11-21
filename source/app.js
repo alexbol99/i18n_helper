@@ -3,17 +3,9 @@
  */
 
 import { Parse } from '../lib/parse-1.6.7.min';
-import { LocaleView } from 'locale';
+import { LocaleComponent } from 'components/localeComponent';
+import { Locale } from 'models/locale';
 
-class Locale extends Parse.Object {
-    constructor() {
-        super('Locale');     // Pass the ClassName to the Parse.Object constructor
-    }
-}
-
-// var Locale = Parse.Object.extend("Locale");
-var localeQueryEn = new Parse.Query(Locale)
-    .equalTo("lang", "en");
 var en = new Locale();
 
 export var App = React.createClass({
@@ -27,24 +19,19 @@ export var App = React.createClass({
         var self = this;
         Object.observe( en, ( changes ) =>
             self.setState({ locale: en.get('data')}) );
-        this.queryEn();
+        en.fetchEn();
     },
 
     render: function() {
         return (
             <div>
                 <h1>I am just testing</h1>
-                <LocaleView
+                <LocaleComponent
                     locale = {this.state.locale}
                 />
             </div>
         );
     },
 
-    queryEn: function() {
-        localeQueryEn.find().then( (resp) =>
-            en.set( "data", JSON.parse(resp[0].get("data")) )
-        )
-    }
 });
 
