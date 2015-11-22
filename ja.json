@@ -38,7 +38,7 @@
             "center-to-xy-placeholder" : "Center to X,Y",
             "pan-to-coordinate-tooltip" :  "Pan to Coordinate",
             "settings-tooltip" : "Settings",
-            "language-tooltip" :  "Change Language",
+            "language-tooltip" :  "言語変更",
             "view-log-tooltip" : "View Server Log",
             "help-tooltip" :  "Help",
             "about-tooltip" :  "About IDB Graphic Viewer",
