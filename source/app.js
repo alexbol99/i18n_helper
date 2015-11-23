@@ -17,6 +17,7 @@ export var App = React.createClass({
 
     componentWillMount: function() {
         var self = this;
+        /* TODO: polyfill Object.observe for browsers other than Chrome or implement immutable */
         Object.observe( en, ( changes ) =>
             self.setState({ locale: en.get('data')}) );
         en.fetchEn();
@@ -31,7 +32,7 @@ export var App = React.createClass({
                 />
             </div>
         );
-    },
+    }
 
 });
 
