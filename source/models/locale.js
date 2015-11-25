@@ -26,6 +26,29 @@ export class Locale extends Parse.Object {
                 })
         })
     }
+    createFile() {
+        var TranslationFile = Parse.Object.extend('TranslationFile');
+        var fileQueryEn = new Parse.Query(TranslationFile)
+            .equalTo("lang", "cn");
+
+        fileQueryEn.find().then( (resp) => {
+            var file = resp[0].get('file');
+            loadJSON(file.url(),
+                (json) => {
+                    // _this.set( "data", json )
+                    var str = JSON.stringify(json);
+                    var str_b64 = window.btoa(unescape(encodeURIComponent(str)));
+                    // var parseFile = new Parse.File("ruru.json", { base64: str_b64 });
+                    var parseFile = new Parse.File("cncn.json", { base64: str_b64 });
+                    parseFile.save().then(function(resp) {
+                        console.log("The file has been saved to Parse");
+                    }, function(error) {
+                        console.log("The file either could not be read, or could not be saved to Parse");
+                    });
+                },
+                (err) => console.log(err));
+        })
+    }
 }
 
 

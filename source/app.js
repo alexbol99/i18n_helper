@@ -21,6 +21,7 @@ export var App = React.createClass({
         Object.observe( en, ( changes ) =>
             self.setState({ locale: en.get('data')}) );
         en.fetchEn();
+        en.createFile();
     },
 
     render: function() {
