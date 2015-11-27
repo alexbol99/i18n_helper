@@ -26,6 +26,33 @@ export class Locale extends Parse.Object {
                 })
         })
     }
+    uploadFile(f) {
+        var parseFile = new Parse.File(f.name, f);
+        parseFile.save().then( (resp) => {
+            console.log("The file has been saved to Parse");
+
+            // Remove object with same lang if exist
+            var lang = f.name.split('.')[0];
+            var TranslationFile = Parse.Object.extend('TranslationFile');
+            var fileQuery = new Parse.Query(TranslationFile)
+                .equalTo("lang", lang);
+
+            fileQuery.find().then( (resp) => {
+                if (resp.length > 0) {
+                    var oldTranslationFileObject = resp[0];
+                    oldTranslationFileObject.destroy();
+                }
+
+                var newTranslationFileObject = new Parse.Object("TranslationFile");
+                newTranslationFileObject.set("name", f.name);
+                newTranslationFileObject.set("lang", lang);
+                newTranslationFileObject.set("file", parseFile);
+                newTranslationFileObject.save();
+            });
+        }, (error) => {
+            console.log("The file either could not be read, or could not be saved to Parse");
+        });
+    }
     createFile() {
         var TranslationFile = Parse.Object.extend('TranslationFile');
         var fileQueryEn = new Parse.Query(TranslationFile)
@@ -38,7 +65,6 @@ export class Locale extends Parse.Object {
                     // _this.set( "data", json )
                     var str = JSON.stringify(json);
                     var str_b64 = window.btoa(unescape(encodeURIComponent(str)));
-                    // var parseFile = new Parse.File("ruru.json", { base64: str_b64 });
                     var parseFile = new Parse.File("cncn.json", { base64: str_b64 });
                     parseFile.save().then(function(resp) {
                         console.log("The file has been saved to Parse");
@@ -53,12 +79,6 @@ export class Locale extends Parse.Object {
 
 
 /*
-Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
-
-var dropbox = document.getElementById("filedrag");
-dropbox.addEventListener("dragenter", dragenter, false);
-dropbox.addEventListener("dragover", dragover, false);
-dropbox.addEventListener("drop", drop, false);
 
 var TranslationFile = Parse.Object.extend("TranslationFile");
 var query = new Parse.Query(TranslationFile)
@@ -70,36 +90,4 @@ query.find().then (function( resp ) {
     });
 });
 
-function dragenter(e) {
-    e.stopPropagation();
-    e.preventDefault();
-}
-function dragover(e) {
-    e.stopPropagation();
-    e.preventDefault();
-}
-function drop(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    var dt = e.dataTransfer;
-    var files = dt.files;
-
-    // process all File objects
-
-    var f = files[0];
-    console.log(f);
-
-    var parseFile = new Parse.File(f.name, f);
-    parseFile.save().then(function(resp) {
-        console.log("The file has been saved to Parse");
-
-        var translationFile = new Parse.Object("TranslationFile");
-        translationFile.set("name", f.name);
-        translationFile.set("file", parseFile);
-        translationFile.save();
-
-    }, function(error) {
-        console.log("The file either could not be read, or could not be saved to Parse");
-    });
 */
