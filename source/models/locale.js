@@ -6,13 +6,16 @@ import { loadJSON } from '../loader';
 
 Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
 
+var TranslationFile = Parse.Object.extend('TranslationFile');
+
 export class Locale extends Parse.Object {
     constructor() {
         super('Locale');     // Pass the ClassName to the Parse.Object constructor
     }
     fetchEn() {
         var localeQueryEn = new Parse.Query(Locale)
-            .equalTo("lang", "en");
+            .equalTo("lang", "en")
+            .limit(1000);
         var _this = this;
         localeQueryEn.find().then( (resp) => {
                 var TranslationFile = Parse.Object.extend('TranslationFile');
@@ -23,31 +26,88 @@ export class Locale extends Parse.Object {
                     loadJSON(file.url(),
                         (json) =>  _this.set( "data", json ),
                         (err) => console.log(err));
-                })
-        })
+                });
+        });
+    }
+    fetch() {
+        var localeQuery = new Parse.Query(Locale)
+            .limit(1000);
+        localeQuery.find().then( (resp) =>
+            this.set("data", resp)
+        );
+    }
+    save(lang, json, parent) {
+        for (let tag in json) {
+
+            var localeQuery = new Parse.Query(Locale)
+                .equalTo("tag", tag);
+            if (parent) {
+                localeQuery.equalTo("parent", parent);
+            }
+
+            localeQuery.find().then( (resp) => {
+                var locale;
+                if (resp.length > 0) {
+                    locale = resp[0];
+                }
+                else {
+                    locale = new Locale();
+                    locale.set("tag", tag);
+                    if (parent) {
+                        locale.set("parent", parent);
+                    }
+                }
+
+                if (typeof json[tag] == "string") {
+                    locale.set(lang, json[tag]);
+                }
+
+                locale.save().then( (locale) => {  // save to Parse Locale table
+                    if (typeof json[tag] == "object") {
+                        this.save(lang, json[tag], locale);
+                    }
+                });
+            });
+        }
     }
     uploadFile(f) {
+        var _this = this;
+
         var parseFile = new Parse.File(f.name, f);
         parseFile.save().then( (resp) => {
-            console.log("The file has been saved to Parse");
 
-            // Remove object with same lang if exist
+            // Query File Object with language as file name
             var lang = f.name.split('.')[0];
-            var TranslationFile = Parse.Object.extend('TranslationFile');
             var fileQuery = new Parse.Query(TranslationFile)
                 .equalTo("lang", lang);
 
             fileQuery.find().then( (resp) => {
+
+                // If already exist - destroy old File Object
                 if (resp.length > 0) {
                     var oldTranslationFileObject = resp[0];
                     oldTranslationFileObject.destroy();
                 }
 
-                var newTranslationFileObject = new Parse.Object("TranslationFile");
-                newTranslationFileObject.set("name", f.name);
-                newTranslationFileObject.set("lang", lang);
-                newTranslationFileObject.set("file", parseFile);
-                newTranslationFileObject.save();
+                // Then create and save new File Object
+                var newTranslationFileObject = new TranslationFile({
+                    "name" : f.name,
+                    "lang" : lang,
+                    "file" : parseFile
+                });
+
+                newTranslationFileObject.save().then( (resp) => {
+                    // Now read the file and create JSON object
+                    var file = resp.get('file');
+                    loadJSON(file.url(),
+                        (json) => {
+                            _this.save(lang, json, null);
+                        },
+                        (error) => {
+                            console.log("Error loading json");
+                        }
+                    );
+                });
             });
         }, (error) => {
             console.log("The file either could not be read, or could not be saved to Parse");
@@ -73,7 +133,7 @@ export class Locale extends Parse.Object {
                     });
                 },
                 (err) => console.log(err));
-        })
+        });
     }
 }
 

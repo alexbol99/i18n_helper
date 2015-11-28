@@ -10,7 +10,7 @@ import { UploadFilesPopup } from 'components/uploadFilesPopup';
 
 import { Locale } from 'models/locale';
 
-var en = new Locale();
+var locale = new Locale();
 
 export var App = React.createClass ({
     getInitialState() {
@@ -23,10 +23,13 @@ export var App = React.createClass ({
     componentWillMount() {
         var self = this;
         /* TODO: polyfill Object.observe for browsers other than Chrome or implement immutable */
-        Object.observe(en, (changes) =>
-            self.setState({locale: en.get('data')}));
-        // en.fetchEn();
-        // en.createFile();
+        Object.observe(locale, (changes) =>
+            self.setState({
+                locale: locale.get('data'),
+                loaded: true
+            }));
+        locale.fetch();
+        // locale.createFile();
     },
     showImportFilesPopup() {
         this.setState({
@@ -39,7 +42,7 @@ export var App = React.createClass ({
         });
     },
     uploadLocaleFile(f) {
-        en.uploadFile(f);
+        locale.uploadFile(f);
     },
     render() {
         var content = this.state.loaded ? (

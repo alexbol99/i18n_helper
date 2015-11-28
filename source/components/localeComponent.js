@@ -5,11 +5,29 @@ export var LocaleComponent = React.createClass({
     },
     render: function() {
         return (
-            /* TODO: Simplify recursion logic */
-            /* TODO: Fix ambiguity with keys */
             <ReactBootstrap.PanelGroup defaultActiveKey="2" accordion>
-                {Object.keys(this.props.locale).map(
-                    section => {
+                {this.props.locale.map(
+                    record => {
+                        var condition = this.props.parent ?
+                            (record.get("parent") ? record.get("parent").id == this.props.parent.id : false) :
+                            (record.get("parent") == undefined);
+                        if (condition) {
+                            var tag = record.get("tag");
+
+                            return (
+                                <ReactBootstrap.Panel key={record.id} header={tag} eventKey={tag} bsStyle="info" >
+                                    <LocaleComponent
+                                        locale = {this.props.locale}
+                                        parent = {record}
+                                    />
+                                    <ItemComponent
+                                        tag = {tag}
+                                        item = {record.get("en")}
+                                    />
+                                </ReactBootstrap.Panel>
+                            )
+                        }
+/*
                         if (typeof(this.props.locale[section]) == 'object') {
                             return (
                                 <ReactBootstrap.Panel key={section} header={section} eventKey={section} bsStyle="success" >
@@ -45,6 +63,7 @@ export var LocaleComponent = React.createClass({
                                 />
                             )
                         }
+*/
                     }
                 )}
             </ReactBootstrap.PanelGroup>
