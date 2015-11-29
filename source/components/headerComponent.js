@@ -51,13 +51,6 @@ var Menu = React.createClass({
                     </ReactBootstrap.Col>
 
                     <ReactBootstrap.Col xs={4} md={2}>
-                        <ReactBootstrap.Button bsSize="large">
-                            <ReactBootstrap.Glyphicon glyph="pencil" />
-                            &nbsp;&nbsp;Edit
-                        </ReactBootstrap.Button>
-                    </ReactBootstrap.Col>
-
-                    <ReactBootstrap.Col xs={4} md={2}>
                         <ReactBootstrap.Button bsSize="large" onClick={this.props.onDownloadButtonClick} >
                             <ReactBootstrap.Glyphicon glyph="cloud-download" />
                         &nbsp;&nbsp;
@@ -69,3 +62,12 @@ var Menu = React.createClass({
         );
     }
 });
+
+/*
+<ReactBootstrap.Col xs={4} md={2}>
+    <ReactBootstrap.Button bsSize="large">
+        <ReactBootstrap.Glyphicon glyph="pencil" />
+    &nbsp;&nbsp;Edit
+    </ReactBootstrap.Button>
+</ReactBootstrap.Col>
+*/

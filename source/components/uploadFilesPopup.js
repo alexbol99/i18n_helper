@@ -44,8 +44,6 @@ export var UploadFilesPopup = React.createClass({
                         <ReactBootstrap.Panel >
                             <div id="filedrag"style={{border: 'none'}}>
                                 <h2>Drop JSON file here ...</h2>
-                                <h2>or</h2>
-                                <h2>press Upload button</h2>
                             </div>
                         </ReactBootstrap.Panel>
                     </ReactBootstrap.Modal.Body>
@@ -59,3 +57,8 @@ export var UploadFilesPopup = React.createClass({
         );
     }
 });
+
+/*
+ <h2>or</h2>
+ <h2>press Upload button</h2>
+ */

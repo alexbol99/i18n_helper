@@ -48,11 +48,18 @@ export var App = React.createClass ({
         var json = {};
         locale.toJSON("en", locale.get('data'), null, json);
     },
+    onItemChanged(event) {
+        var id = event.target.id;
+        var lang = event.target.name;
+        var text = event.target.value;
+        locale.updateLang(id, lang, text);
+    },
     render() {
         var content = this.state.loaded ? (
             <ReactBootstrap.Panel>
                 <LocaleComponent
                     locale = {this.state.locale}
+                    onItemChanged = {this.onItemChanged}
                 />
             </ReactBootstrap.Panel>
         ) : (

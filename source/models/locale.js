@@ -29,6 +29,13 @@ export class Locale extends Parse.Object {
                 });
         });
     }
+    updateLang(id, lang, text) {
+        var query = new Parse.Query(Locale);
+        query.get(id).then((record) => {
+            record.set(lang, text);
+            record.save();
+        });
+    }
     fetch() {
         var localeQuery = new Parse.Query(Locale)
             .limit(1000);

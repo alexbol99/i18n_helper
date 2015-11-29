@@ -17,6 +17,7 @@ export var LocaleComponent = React.createClass({
                             var itemComponentInstance = !record.get("section") ? (
                                 <ItemComponent
                                     record = {record}
+                                    onItemChanged = {this.props.onItemChanged}
                                 />) : null;
 
                             var panelStyle = record.get("section") ? "info" : "default";
@@ -40,48 +41,12 @@ export var LocaleComponent = React.createClass({
                                     <LocaleComponent
                                         locale = {this.props.locale}
                                         parent = {record}
+                                        onItemChanged = {this.props.onItemChanged}
                                     />
                                     {itemComponentInstance}
                                 </ReactBootstrap.Panel>
                             )
                         }
-/*
-                        if (typeof(this.props.locale[section]) == 'object') {
-                            return (
-                                <ReactBootstrap.Panel key={section} header={section} eventKey={section} bsStyle="success" >
-                                { Object.keys(this.props.locale[section]).map(
-                                    (tag) => {
-                                        if (typeof(this.props.locale[section][tag]) == 'object') {
-                                            return (
-                                                <ReactBootstrap.Panel collapsible key={tag} header={tag} eventKey={tag} bsStyle="success" >
-                                                    <LocaleComponent
-                                                        locale = {this.props.locale[section][tag]}
-                                                    />
-                                                </ReactBootstrap.Panel>
-                                            )
-                                        }
-                                        else {
-                                            return (
-                                                <ItemComponent key={tag}
-                                                    tag = {tag}
-                                                    item = {this.props.locale[section][tag]}
-                                                />
-                                            )
-                                        }
-                                    }
-                                )}
-                                </ReactBootstrap.Panel>
-                            );
-                        }
-                        else {
-                            return (
-                                <ItemComponent key={section}
-                                    tag = {section}
-                                    item = {this.props.locale[section]}
-                                />
-                            )
-                        }
-*/
                     }
                 )}
             </ReactBootstrap.PanelGroup>
@@ -98,35 +63,31 @@ var ItemComponent = React.createClass({
     },
     render: function() {
         return (
-            <div>
-                <h5>{this.props.record.get('en')}</h5>
-                <h5>{this.props.record.get('cn')}</h5>
-                <h5>{this.props.record.get('ja')}</h5>
-                <h5>{this.props.record.get('ru')}</h5>
-            </div>
+            <ReactBootstrap.ListGroup>
+                {languages.map( (lang) => {
+                    return (
+                        <ReactBootstrap.ListGroupItem key={this.props.record.get("tag") + lang}>
+                            <ReactBootstrap.Grid>
+                                <ReactBootstrap.Row>
+                                    <ReactBootstrap.Col xs={2} md={2}>
+                                        {lang}
+                                    </ReactBootstrap.Col>
+                                    <ReactBootstrap.Col xs={10} md={10}>
+                                        <ReactBootstrap.Input
+                                            style={{width:"80%"}}
+                                            type="text"
+                                            placeholder="Enter text"
+                                            defaultValue={this.props.record.get(lang)}
+                                            name={lang}
+                                            id={this.props.record.id}
+                                            onChange={this.props.onItemChanged} />
+                                    </ReactBootstrap.Col>
+                                </ReactBootstrap.Row>
+                            </ReactBootstrap.Grid>
+                        </ReactBootstrap.ListGroupItem>
+                    )
+                })}
+            </ReactBootstrap.ListGroup>
         );
     }
 });
-/*
-<ReactBootstrap.ListGroup>
-            {languages.map (
-                (lang) => {
-
-                    <ReactBootstrap.ListGroupItem key={this.props.record.get("tag") + lang}>
-                        <ReactBootstrap.Grid>
-                            <ReactBootstrap.Row className='show-grid'>
-                                <ReactBootstrap.Col xs={6} md={6}>
-                                    <h5>{lang}</h5>
-                                </ReactBootstrap.Col>
-                                <ReactBootstrap.Col xs={6} md={6}>
-                                    <h5>{this.props.record.get(lang)}</h5>
-                                </ReactBootstrap.Col>
-                            </ReactBootstrap.Row>
-                        </ReactBootstrap.Grid>
-                    </ReactBootstrap.ListGroupItem>
-
-                })
-                }
-</ReactBootstrap.ListGroup>
-
-*/
