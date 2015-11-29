@@ -13,6 +13,7 @@ export var HeaderComponent = React.createClass({
                 <Title />
                 <Menu
                     onImportButtonClick = {this.props.onImportButtonClick}
+                    onDownloadButtonClick = {this.props.onDownloadButtonClick}
                 />
             </div>
         );
@@ -57,7 +58,7 @@ var Menu = React.createClass({
                     </ReactBootstrap.Col>
 
                     <ReactBootstrap.Col xs={4} md={2}>
-                        <ReactBootstrap.Button bsSize="large">
+                        <ReactBootstrap.Button bsSize="large" onClick={this.props.onDownloadButtonClick} >
                             <ReactBootstrap.Glyphicon glyph="cloud-download" />
                         &nbsp;&nbsp;
                             Download

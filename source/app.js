@@ -44,6 +44,10 @@ export var App = React.createClass ({
     uploadLocaleFile(f) {
         locale.uploadFile(f);
     },
+    downloadJSON() {
+        var json = {};
+        locale.toJSON("en", locale.get('data'), null, json);
+    },
     render() {
         var content = this.state.loaded ? (
             <LocaleComponent
@@ -68,6 +72,7 @@ export var App = React.createClass ({
             <ReactBootstrap.Panel style={{width: '70vw', margin: 'auto'}}>
                 <HeaderComponent
                     onImportButtonClick = {this.showImportFilesPopup}
+                    onDownloadButtonClick = {this.downloadJSON}
                 />
                 {content}
                 {importPopup}

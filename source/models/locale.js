@@ -36,7 +36,7 @@ export class Locale extends Parse.Object {
             this.set("data", resp)
         );
     }
-    save(lang, json, parent) {
+    fromJSON(lang, json, parent) {
         for (let tag in json) {
 
             var localeQuery = new Parse.Query(Locale)
@@ -62,13 +62,28 @@ export class Locale extends Parse.Object {
                     locale.set(lang, json[tag]);
                 }
 
-                locale.save().then( (locale) => {  // save to Parse Locale table
+                locale.save().then( (locale) => {                 // save to Parse Locale table
                     if (typeof json[tag] == "object") {
-                        this.save(lang, json[tag], locale);
+                        this.fromJSON(lang, json[tag], locale);   // recursive call
                     }
                 });
             });
         }
+    }
+    toJSON(lang, locale, parent, json) {
+        locale.forEach( (record) => {
+            var tag = record.get("tag");
+            var ok = parent ?
+                (record.get("parent") ? record.get("parent").id == parent.id : false) :
+                (record.get("parent") == undefined);
+            if (ok) {
+                // TODO: something instead of record.get(lang) to indicate this is a section
+                json[tag] = record.get(lang) ? record.get(lang) : {}
+            }
+            if (typeof json[tag] == "object") {
+                this.toJSON(lang, locale, record, json[tag]);
+            }
+        });
     }
     uploadFile(f) {
         var _this = this;
@@ -101,7 +116,7 @@ export class Locale extends Parse.Object {
                     var file = resp.get('file');
                     loadJSON(file.url(),
                         (json) => {
-                            _this.save(lang, json, null);
+                            _this.fromJSON(lang, json, null);
                         },
                         (error) => {
                             console.log("Error loading json");
