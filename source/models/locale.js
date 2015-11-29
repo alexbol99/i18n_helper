@@ -59,7 +59,11 @@ export class Locale extends Parse.Object {
                 }
 
                 if (typeof json[tag] == "string") {
+                    locale.set("section", false);
                     locale.set(lang, json[tag]);
+                }
+                if (typeof json[tag] == "object") {
+                    locale.set("section", true);
                 }
 
                 locale.save().then( (locale) => {                 // save to Parse Locale table
@@ -77,11 +81,10 @@ export class Locale extends Parse.Object {
                 (record.get("parent") ? record.get("parent").id == parent.id : false) :
                 (record.get("parent") == undefined);
             if (ok) {
-                // TODO: something instead of record.get(lang) to indicate this is a section
-                json[tag] = record.get(lang) ? record.get(lang) : {}
+                json[tag] = record.get("section") ? {} : record.get(lang);
             }
             if (typeof json[tag] == "object") {
-                this.toJSON(lang, locale, record, json[tag]);
+                this.toJSON(lang, locale, record, json[tag]);   // recursive call
             }
         });
     }

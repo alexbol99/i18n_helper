@@ -50,9 +50,11 @@ export var App = React.createClass ({
     },
     render() {
         var content = this.state.loaded ? (
-            <LocaleComponent
-                locale = {this.state.locale}
-            />
+            <ReactBootstrap.Panel>
+                <LocaleComponent
+                    locale = {this.state.locale}
+                />
+            </ReactBootstrap.Panel>
         ) : (
             <ReactBootstrap.Image src="assets/letter-blocks-aqua.png" circle style={{
                 display: 'block',
@@ -74,6 +76,7 @@ export var App = React.createClass ({
                     onImportButtonClick = {this.showImportFilesPopup}
                     onDownloadButtonClick = {this.downloadJSON}
                 />
+                <br/>
                 {content}
                 {importPopup}
             </ReactBootstrap.Panel>

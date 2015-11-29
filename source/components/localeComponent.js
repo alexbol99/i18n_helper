@@ -14,16 +14,34 @@ export var LocaleComponent = React.createClass({
                         if (condition) {
                             var tag = record.get("tag");
 
+                            var itemComponentInstance = !record.get("section") ? (
+                                <ItemComponent
+                                    record = {record}
+                                />) : null;
+
+                            var panelStyle = record.get("section") ? "info" : "default";
+
+                            var headerInstance = record.get("section") ? (
+                                <h3>
+                                    Section:
+                                    &nbsp;
+                                    <b>{tag}</b>
+                                </h3>
+                            ) : (
+                                <h3>
+                                    Tag:
+                                &nbsp;
+                                    <b>{tag}</b>
+                                </h3>
+                            );
+
                             return (
-                                <ReactBootstrap.Panel key={record.id} header={tag} eventKey={tag} bsStyle="info" >
+                                <ReactBootstrap.Panel key={record.id} header={headerInstance} eventKey={tag} bsStyle={panelStyle} >
                                     <LocaleComponent
                                         locale = {this.props.locale}
                                         parent = {record}
                                     />
-                                    <ItemComponent
-                                        tag = {tag}
-                                        item = {record.get("en")}
-                                    />
+                                    {itemComponentInstance}
                                 </ReactBootstrap.Panel>
                             )
                         }
@@ -71,6 +89,7 @@ export var LocaleComponent = React.createClass({
     }
 });
 
+var languages = ['en', 'cn', 'ja', 'ru'];
 
 var ItemComponent = React.createClass({
     getInitialState: function() {
@@ -79,20 +98,35 @@ var ItemComponent = React.createClass({
     },
     render: function() {
         return (
-            <ReactBootstrap.ListGroupItem key={this.props.tag}>
-                <ReactBootstrap.Grid>
-                    <ReactBootstrap.Row className='show-grid'>
-                        <ReactBootstrap.Col xs={6} md={6}>
-                            <h5>{this.props.tag}</h5>
-                        </ReactBootstrap.Col>
-                        <ReactBootstrap.Col xs={6} md={6}>
-                            <h5>{this.props.item}</h5>
-                        </ReactBootstrap.Col>
-                    </ReactBootstrap.Row>
-                </ReactBootstrap.Grid>
-            </ReactBootstrap.ListGroupItem>
+            <div>
+                <h5>{this.props.record.get('en')}</h5>
+                <h5>{this.props.record.get('cn')}</h5>
+                <h5>{this.props.record.get('ja')}</h5>
+                <h5>{this.props.record.get('ru')}</h5>
+            </div>
         );
     }
 });
+/*
+<ReactBootstrap.ListGroup>
+            {languages.map (
+                (lang) => {
 
+                    <ReactBootstrap.ListGroupItem key={this.props.record.get("tag") + lang}>
+                        <ReactBootstrap.Grid>
+                            <ReactBootstrap.Row className='show-grid'>
+                                <ReactBootstrap.Col xs={6} md={6}>
+                                    <h5>{lang}</h5>
+                                </ReactBootstrap.Col>
+                                <ReactBootstrap.Col xs={6} md={6}>
+                                    <h5>{this.props.record.get(lang)}</h5>
+                                </ReactBootstrap.Col>
+                            </ReactBootstrap.Row>
+                        </ReactBootstrap.Grid>
+                    </ReactBootstrap.ListGroupItem>
 
+                })
+                }
+</ReactBootstrap.ListGroup>
+
+*/
