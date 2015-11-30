@@ -56,7 +56,7 @@ export var LocaleComponent = React.createClass({
     }
 });
 
-var languages = ['en', 'cn', 'ja', 'ru'];
+// var languages = ['en', 'cn', 'ja', 'ru'];
 
 var ItemComponent = React.createClass({
     getInitialState: function() {
@@ -66,7 +66,10 @@ var ItemComponent = React.createClass({
     render: function() {
         return (
             <ReactBootstrap.ListGroup>
-                {languages.map( (lang) => {
+                {Object.keys(this.props.record).map( (lang) => {
+                    /* Get all keys of the object and suppose than lang is two-symbols string and not 'id' */
+                    if (lang.length != 2 || lang == 'id')
+                        return;
                     var tag = this.props.record.tag;
                     var text = this.props.record[lang];
                     return (
