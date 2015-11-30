@@ -8,21 +8,23 @@ export var LocaleComponent = React.createClass({
             <ReactBootstrap.PanelGroup defaultActiveKey="2" accordion>
                 {this.props.locale.map(
                     record => {
+                        var parent = record.parent;
                         var condition = this.props.parent ?
-                            (record.get("parent") ? record.get("parent").id == this.props.parent.id : false) :
-                            (record.get("parent") == undefined);
+                            (parent ? parent.id == this.props.parent.id : false) :
+                            (parent == undefined);
                         if (condition) {
-                            var tag = record.get("tag");
+                            var tag = record.tag;
+                            var section = record.section;
 
-                            var itemComponentInstance = !record.get("section") ? (
+                            var itemComponentInstance = !section ? (
                                 <ItemComponent
                                     record = {record}
                                     onItemChanged = {this.props.onItemChanged}
                                 />) : null;
 
-                            var panelStyle = record.get("section") ? "info" : "default";
+                            var panelStyle = section ? "info" : "default";
 
-                            var headerInstance = record.get("section") ? (
+                            var headerInstance = section ? (
                                 <h3>
                                     Section:
                                     &nbsp;
@@ -65,8 +67,10 @@ var ItemComponent = React.createClass({
         return (
             <ReactBootstrap.ListGroup>
                 {languages.map( (lang) => {
+                    var tag = this.props.record.tag;
+                    var text = this.props.record[lang];
                     return (
-                        <ReactBootstrap.ListGroupItem key={this.props.record.get("tag") + lang}>
+                        <ReactBootstrap.ListGroupItem key={tag + lang}>
                             <ReactBootstrap.Grid>
                                 <ReactBootstrap.Row>
                                     <ReactBootstrap.Col xs={2} md={2}>
@@ -77,7 +81,7 @@ var ItemComponent = React.createClass({
                                             style={{width:"80%"}}
                                             type="text"
                                             placeholder="Enter text"
-                                            defaultValue={this.props.record.get(lang)}
+                                            defaultValue={text}
                                             name={lang}
                                             id={this.props.record.id}
                                             onChange={this.props.onItemChanged} />
