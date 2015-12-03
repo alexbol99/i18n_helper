@@ -59,6 +59,7 @@ export var App = React.createClass ({
     uploadLocaleFile(f) {
         locale.uploadFile(f).then( (resp) => {
             this.fetchLocale();
+            this.hideImportFilesPopup();
         } );
     },
     downloadJSON() {

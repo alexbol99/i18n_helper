@@ -1,1 +1,1 @@
-babel --modules amd source -d out
+babel --modules amd source -w -d out
