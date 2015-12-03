@@ -8,13 +8,13 @@ export var LocaleComponent = React.createClass({
             <ReactBootstrap.PanelGroup defaultActiveKey="2" accordion>
                 {this.props.locale.map(
                     record => {
-                        var parent = record.parent;
+                        var parent = record.get("parent");
                         var condition = this.props.parent ?
                             (parent ? parent.id == this.props.parent.id : false) :
                             (parent == undefined);
                         if (condition) {
-                            var tag = record.tag;
-                            var section = record.section;
+                            var tag = record.get("tag");
+                            var section = record.get("section");
 
                             var itemComponentInstance = !section ? (
                                 <ItemComponent
@@ -56,7 +56,7 @@ export var LocaleComponent = React.createClass({
     }
 });
 
-// var languages = ['en', 'cn', 'ja', 'ru'];
+var languages = ['en', 'cn', 'ja', 'ru'];
 
 var ItemComponent = React.createClass({
     getInitialState: function() {
@@ -66,12 +66,12 @@ var ItemComponent = React.createClass({
     render: function() {
         return (
             <ReactBootstrap.ListGroup>
-                {Object.keys(this.props.record).map( (lang) => {
+                {languages.map( (lang) => {
                     /* Get all keys of the object and suppose than lang is two-symbols string and not 'id' */
                     if (lang.length != 2 || lang == 'id')
                         return;
-                    var tag = this.props.record.tag;
-                    var text = this.props.record[lang];
+                    var tag = this.props.record.get("tag");
+                    var text = this.props.record.get(lang);
                     return (
                         <ReactBootstrap.ListGroupItem key={tag + lang}>
                             <ReactBootstrap.Grid>
@@ -83,6 +83,7 @@ var ItemComponent = React.createClass({
                                         <ReactBootstrap.Input
                                             style={{width:"80%"}}
                                             type="text"
+                                            value={text}
                                             placeholder="Enter text"
                                             defaultValue={text}
                                             name={lang}

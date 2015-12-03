@@ -2,7 +2,7 @@
  * Created by alexbol on 11/18/2015.
  */
 
-//import { Parse } from '../lib/parse-1.6.7.min';
+import { Parse } from '../lib/parse-1.6.7.min';
 //import { ParseReact } from 'lib/parse-react.js';
 
 import { HeaderComponent } from 'components/headerComponent';
@@ -11,35 +11,40 @@ import { UploadFilesPopup } from 'components/uploadFilesPopup';
 
 import { Locale } from 'models/locale';
 
-Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
+//Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
 
 var locale = new Locale();
 
 export var App = React.createClass ({
-    mixins: [ParseReact.Mixin],
+    // mixins: [ParseReact.Mixin],
     getInitialState() {
         return ({
-            locale: {},
-            loaded: false,
+            locale: [],
             importFilesPopupOpened: false
         });
     },
-    observe: function() {
-        return {
-            locale: (new Parse.Query(Locale))
-                .limit(1000)
-        };
-    },
+    //observe: function(props, state) {
+    //    return {
+    //        locale: (new Parse.Query(Locale))
+    //            .limit(1000)
+    //    };
+    //},
     componentWillMount() {
-        var self = this;
+        //var self = this;
         /* TODO: polyfill Object.observe for browsers other than Chrome or implement immutable */
         //Object.observe(locale, (changes) =>
         //    self.setState({
         //        locale: locale.get('data'),
         //        loaded: true
         //    }));
-        // locale.fetch();
+        this.fetchLocale();
         // locale.createFile();
+    },
+    fetchLocale() {
+        locale.fetch().then( (resp) =>
+            this.setState({
+                locale: resp
+            }));
     },
     showImportFilesPopup() {
         this.setState({
@@ -52,7 +57,9 @@ export var App = React.createClass ({
         });
     },
     uploadLocaleFile(f) {
-        locale.uploadFile(f);
+        locale.uploadFile(f).then( (resp) => {
+            this.fetchLocale();
+        } );
     },
     downloadJSON() {
         var json = {};
@@ -65,10 +72,10 @@ export var App = React.createClass ({
         locale.updateLang(id, lang, text);
     },
     render() {
-        var content = this.data.locale.length > 0 ? (
+        var content = this.state.locale.length > 0 ? (
             <ReactBootstrap.Panel>
                 <LocaleComponent
-                    locale = {this.data.locale}
+                    locale = {this.state.locale}
                     onItemChanged = {this.onItemChanged}
                 />
             </ReactBootstrap.Panel>

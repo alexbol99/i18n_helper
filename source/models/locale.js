@@ -39,11 +39,14 @@ export class Locale extends Parse.Object {
     fetch() {
         var localeQuery = new Parse.Query(Locale)
             .limit(1000);
-        localeQuery.find().then( (resp) =>
-            this.set("data", resp)
-        );
+        //localeQuery.find().then( (resp) =>
+        //    this.set("data", resp)
+        //);
+        return localeQuery.find();
     }
     fromJSON(lang, json, parent) {
+        var promises = [];
+
         for (let tag in json) {
 
             var localeQuery = new Parse.Query(Locale)
@@ -73,13 +76,23 @@ export class Locale extends Parse.Object {
                     locale.set("section", true);
                 }
 
+                var promise = new Parse.Promise();
+                promises.push(promise);
+
                 locale.save().then( (locale) => {                 // save to Parse Locale table
                     if (typeof json[tag] == "object") {
-                        this.fromJSON(lang, json[tag], locale);   // recursive call
+                        this.fromJSON(lang, json[tag], locale).then( function( resp) {
+                            console.log("inner promise resolved");
+                            promise.resolve();
+                        });   // recursive call
+                    }
+                    else {      // typeof json[tag] == "string"
+                        promise.resolve();
                     }
                 });
             });
         }
+        return Parse.Promise.when(promises); //  for some reason became resolved before inner promised are resolves
     }
     toJSON(lang, locale, parent, json) {
         locale.forEach( (record) => {
@@ -97,6 +110,7 @@ export class Locale extends Parse.Object {
     }
     uploadFile(f) {
         var _this = this;
+        var promise = new Parse.Promise();
 
         var parseFile = new Parse.File(f.name, f);
         parseFile.save().then( (resp) => {
@@ -126,7 +140,10 @@ export class Locale extends Parse.Object {
                     var file = resp.get('file');
                     loadJSON(file.url(),
                         (json) => {
-                            _this.fromJSON(lang, json, null);
+                            _this.fromJSON(lang, json, null).then( function (resp) {
+                                console.log('we are here');
+                                promise.resolve();
+                            });
                         },
                         (error) => {
                             console.log("Error loading json");
@@ -137,6 +154,8 @@ export class Locale extends Parse.Object {
         }, (error) => {
             console.log("The file either could not be read, or could not be saved to Parse");
         });
+
+        return promise;
     }
     createFile() {
         var TranslationFile = Parse.Object.extend('TranslationFile');
