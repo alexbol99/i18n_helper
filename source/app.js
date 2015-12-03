@@ -30,15 +30,7 @@ export var App = React.createClass ({
     //    };
     //},
     componentWillMount() {
-        //var self = this;
-        /* TODO: polyfill Object.observe for browsers other than Chrome or implement immutable */
-        //Object.observe(locale, (changes) =>
-        //    self.setState({
-        //        locale: locale.get('data'),
-        //        loaded: true
-        //    }));
         this.fetchLocale();
-        // locale.createFile();
     },
     fetchLocale() {
         locale.fetch().then( (resp) =>
@@ -59,7 +51,7 @@ export var App = React.createClass ({
     uploadLocaleFile(f) {
         locale.uploadFile(f).then( (resp) => {
             this.fetchLocale();
-            this.hideImportFilesPopup();
+            // this.hideImportFilesPopup();
         } );
     },
     downloadJSON() {

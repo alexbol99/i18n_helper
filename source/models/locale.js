@@ -12,23 +12,6 @@ export class Locale extends Parse.Object {
     constructor() {
         super('Locale');     // Pass the ClassName to the Parse.Object constructor
     }
-    fetchEn() {
-        var localeQueryEn = new Parse.Query(Locale)
-            .equalTo("lang", "en")
-            .limit(1000);
-        var _this = this;
-        localeQueryEn.find().then( (resp) => {
-                var TranslationFile = Parse.Object.extend('TranslationFile');
-                var fileQueryEn = new Parse.Query(TranslationFile)
-                    .equalTo("lang", "en");
-                fileQueryEn.find().then( (resp) => {
-                    var file = resp[0].get('file');
-                    loadJSON(file.url(),
-                        (json) =>  _this.set( "data", json ),
-                        (err) => console.log(err));
-                });
-        });
-    }
     updateLang(id, lang, text) {
         var query = new Parse.Query(Locale);
         query.get(id).then((record) => {
@@ -39,60 +22,61 @@ export class Locale extends Parse.Object {
     fetch() {
         var localeQuery = new Parse.Query(Locale)
             .limit(1000);
-        //localeQuery.find().then( (resp) =>
-        //    this.set("data", resp)
-        //);
         return localeQuery.find();
     }
     fromJSON(lang, json, parent) {
         var promises = [];
 
         for (let tag in json) {
+            promises.push(this.localeSave(lang, json, parent, tag));
+        }
 
-            var localeQuery = new Parse.Query(Locale)
-                .equalTo("tag", tag);
-            if (parent) {
-                localeQuery.equalTo("parent", parent);
+        return Parse.Promise.when(promises);
+    }
+    localeSave(lang, json, parent, tag) {
+        var _this = this;
+        var promise = new Parse.Promise();
+
+        var localeQuery = new Parse.Query(Locale)
+            .equalTo("tag", tag);
+        if (parent) {
+            localeQuery.equalTo("parent", parent);
+        }
+
+        localeQuery.find().then( (resp) => {
+            var locale;
+            if (resp.length > 0) {
+                locale = resp[0];
+            }
+            else {
+                locale = new Parse.Object("Locale");
+                locale.set("tag", tag);
+                if (parent) {
+                    locale.set("parent", parent);
+                }
             }
 
-            localeQuery.find().then( (resp) => {
-                var locale;
-                if (resp.length > 0) {
-                    locale = resp[0];
-                }
-                else {
-                    locale = new Locale();
-                    locale.set("tag", tag);
-                    if (parent) {
-                        locale.set("parent", parent);
-                    }
-                }
+            if (typeof json[tag] == "string") {
+                locale.set("section", false);
+                locale.set(lang, json[tag]);
+            }
+            if (typeof json[tag] == "object") {
+                locale.set("section", true);
+            }
 
-                if (typeof json[tag] == "string") {
-                    locale.set("section", false);
-                    locale.set(lang, json[tag]);
-                }
+            locale.save().then((locale) => {                 // save to Parse Locale table
                 if (typeof json[tag] == "object") {
-                    locale.set("section", true);
-                }
-
-                var promise = new Parse.Promise();
-                promises.push(promise);
-
-                locale.save().then( (locale) => {                 // save to Parse Locale table
-                    if (typeof json[tag] == "object") {
-                        this.fromJSON(lang, json[tag], locale).then( function( resp) {
-                            console.log("inner promise resolved");
-                            promise.resolve();
-                        });   // recursive call
-                    }
-                    else {      // typeof json[tag] == "string"
+                    _this.fromJSON(lang, json[tag], locale).then(function (resp) {
+                        console.log("inner promise resolved");
                         promise.resolve();
-                    }
-                });
+                    });   // recursive call
+                }
+                else {      // typeof json[tag] == "string"
+                    promise.resolve();
+                }
             });
-        }
-        return Parse.Promise.when(promises); //  for some reason became resolved before inner promised are resolves
+        });
+        return promise;
     }
     toJSON(lang, locale, parent, json) {
         locale.forEach( (record) => {
