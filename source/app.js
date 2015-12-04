@@ -2,21 +2,15 @@
  * Created by alexbol on 11/18/2015.
  */
 
-import { Parse } from '../lib/parse-1.6.7.min';
-//import { ParseReact } from 'lib/parse-react.js';
-
 import { HeaderComponent } from 'components/headerComponent';
 import { LocaleComponent } from 'components/localeComponent';
 import { UploadFilesPopup } from 'components/uploadFilesPopup';
 
 import { Locale } from 'models/locale';
 
-//Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
-
-var locale = new Locale();
+var localeModel = Locale.prototype;
 
 export var App = React.createClass ({
-    // mixins: [ParseReact.Mixin],
     getInitialState() {
         return ({
             locale: [],
@@ -33,7 +27,7 @@ export var App = React.createClass ({
         this.fetchLocale();
     },
     fetchLocale() {
-        locale.fetch().then( (resp) =>
+        localeModel.fetch().then( (resp) =>
             this.setState({
                 locale: resp
             }));
@@ -49,20 +43,31 @@ export var App = React.createClass ({
         });
     },
     uploadLocaleFile(f) {
-        locale.uploadFile(f).then( (resp) => {
+        localeModel.uploadFile(f).then( (resp) => {
             this.fetchLocale();
             // this.hideImportFilesPopup();
         } );
     },
     downloadJSON() {
         var json = {};
-        locale.toJSON("en", locale.get('data'), null, json);
+        localeModel.toJSON("en", locale.get('data'), null, json);
     },
     onItemChanged(event) {
         var id = event.target.id;
         var lang = event.target.name;
         var text = event.target.value;
-        locale.updateLang(id, lang, text);
+        // Update data on Parse
+        localeModel.updateLang(id, lang, text);
+        // Change state and render
+        var newLocale = this.state.locale.slice();
+        newLocale.forEach( (record) => {
+            if (record.id == id) {
+                record.set(lang,text);
+            }
+        } );
+    },
+    onItemSubmitted() {
+        this.forceUpdate();
     },
     render() {
         var content = this.state.locale.length > 0 ? (
@@ -70,6 +75,7 @@ export var App = React.createClass ({
                 <LocaleComponent
                     locale = {this.state.locale}
                     onItemChanged = {this.onItemChanged}
+                    onItemSubmitted = {this.onItemSubmitted}
                 />
             </ReactBootstrap.Panel>
         ) : (
