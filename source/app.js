@@ -7,13 +7,19 @@ import { LocaleComponent } from 'components/localeComponent';
 import { UploadFilesPopup } from 'components/uploadFilesPopup';
 
 import { Locale } from 'models/locale';
+import { Language } from 'models/language';
+
+//import { Parse } from '../../lib/parse-1.6.7.min';
+//Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
 
 var localeModel = Locale.prototype;
+var languageModel = Language.prototype;
 
 export var App = React.createClass ({
     getInitialState() {
         return ({
             locale: [],
+            languages: new Map(),
             importFilesPopupOpened: false
         });
     },
@@ -24,13 +30,26 @@ export var App = React.createClass ({
     //    };
     //},
     componentWillMount() {
-        this.fetchLocale();
+        this.fetchData();
+    },
+    fetchData() {
+        localeModel.fetch().then( (locale) => {
+            this.setState({
+                locale: locale
+            });
+            return languageModel.fetch();
+        }).then( (languages) => {
+            var m = new Map();
+            languages.forEach( (lang) => {
+                m.set(lang.get("iso"), true);
+            })
+            this.setState({
+                languages: m
+            });
+        });
     },
     fetchLocale() {
-        localeModel.fetch().then( (resp) =>
-            this.setState({
-                locale: resp
-            }));
+        var promise = new Parse.Pro
     },
     showImportFilesPopup() {
         this.setState({
@@ -44,7 +63,7 @@ export var App = React.createClass ({
     },
     uploadLocaleFile(f) {
         localeModel.uploadFile(f).then( (resp) => {
-            this.fetchLocale();
+            this.fetchData();
             // this.hideImportFilesPopup();
         } );
     },
@@ -69,11 +88,26 @@ export var App = React.createClass ({
     onItemSubmitted() {
         this.forceUpdate();
     },
+    changeLanguageDisplayed(event) {
+        var m = new Map();
+        this.state.languages.forEach( (checked, lang) => {
+            if (lang == event.target.name) {
+                m.set(lang, event.target.checked);
+            }
+            else {
+                m.set(lang, checked);
+            }
+        });
+        this.setState({
+            languages: m
+        });
+    },
     render() {
-        var content = this.state.locale.length > 0 ? (
+        var content = this.state.locale.length > 0 && this.state.languages.size > 0 ? (
             <ReactBootstrap.Panel>
                 <LocaleComponent
                     locale = {this.state.locale}
+                    languages = {this.state.languages}
                     onItemChanged = {this.onItemChanged}
                     onItemSubmitted = {this.onItemSubmitted}
                 />
@@ -98,6 +132,8 @@ export var App = React.createClass ({
                 <HeaderComponent
                     onImportButtonClick = {this.showImportFilesPopup}
                     onDownloadButtonClick = {this.downloadJSON}
+                    languages = {this.state.languages}
+                    onLanguageCheckboxChanged = {this.changeLanguageDisplayed}
                 />
                 <br/>
                 {content}

@@ -15,6 +15,10 @@ export var HeaderComponent = React.createClass({
                     onImportButtonClick = {this.props.onImportButtonClick}
                     onDownloadButtonClick = {this.props.onDownloadButtonClick}
                 />
+                <Languages
+                    languages = {this.props.languages}
+                    onLanguageCheckboxChanged = {this.props.onLanguageCheckboxChanged}
+                />
             </div>
         );
     }
@@ -59,6 +63,36 @@ var Menu = React.createClass({
                     </ReactBootstrap.Col>
                 </ReactBootstrap.Row>
             </ReactBootstrap.Grid>
+        );
+    }
+});
+
+var Languages = React.createClass({
+    getInitialState: function() {
+        return ({
+        });
+    },
+    render: function() {
+        return (
+            <ul className="checkbox-grid">
+            {[...this.props.languages.keys()].map( (lang) => {
+                var checkBoxInstance = this.props.languages.get(lang) ? (
+                    <ReactBootstrap.Input
+                        type="checkbox" label={lang} name={lang} checked onChange={this.props.onLanguageCheckboxChanged} />
+                ) : (
+                    <ReactBootstrap.Input
+                        type="checkbox" label={lang} name={lang} onChange={this.props.onLanguageCheckboxChanged} />
+                )
+
+                return (
+                    <li key={lang}>
+                        {checkBoxInstance}
+                    </li>
+                )
+                })
+            }
+
+            </ul>
         );
     }
 });

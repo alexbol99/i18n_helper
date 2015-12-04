@@ -1,4 +1,4 @@
-var languages = ['en', 'cn', 'ja', 'ru'];
+// var languages = ['en', 'cn', 'ja', 'ru'];
 
 export var LocaleComponent = React.createClass({
     getInitialState() {
@@ -7,11 +7,13 @@ export var LocaleComponent = React.createClass({
     },
     isRecordValid(record) {
         var valid = true;
-        languages.forEach( (lang) => {
-            var text = record.get(lang);
-            var textEn = record.get("en");
-            if (text == "" || lang != "en" && text == textEn) {
-                valid = false;
+        this.props.languages.forEach( (checked, lang) => {
+            if (checked) {
+                var text = record.get(lang);
+                var textEn = record.get("en");
+                if (text == "" || lang != "en" && text == textEn) {
+                    valid = false;
+                }
             }
         });
         return valid;
@@ -48,6 +50,7 @@ export var LocaleComponent = React.createClass({
                             var itemComponentInstance = !section ? (
                                 <LangItemsList
                                     record = {record}
+                                    languages = {this.props.languages}
                                     onItemChanged = {this.props.onItemChanged}
                                     onItemSubmitted = {this.props.onItemSubmitted}
                                 />) : null;
@@ -73,6 +76,7 @@ export var LocaleComponent = React.createClass({
                                 <ReactBootstrap.Panel key={record.id} header={headerInstance} eventKey={tag} bsStyle={panelStyle} >
                                     <LocaleComponent
                                         locale = {this.props.locale}
+                                        languages = {this.props.languages}
                                         parent = {record}
                                         onItemChanged = {this.props.onItemChanged}
                                         onItemSubmitted = {this.props.onItemSubmitted}
@@ -94,6 +98,12 @@ var LangItemsList = React.createClass({
         });
     },
     render() {
+        var languages = [];
+        this.props.languages.forEach( (checked, lang) => {
+            if (checked) {
+                languages.push(lang);
+            }
+        });
         return (
             <ReactBootstrap.ListGroup>
                 {languages.map( (lang) => {
