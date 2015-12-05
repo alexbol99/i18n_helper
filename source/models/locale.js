@@ -141,10 +141,17 @@ export class Locale extends Parse.Object {
 
         return promise;
     }
-    createFile() {
+    createFile(lang, json) {
+        var str = JSON.stringify(json);
+        var str_b64 = window.btoa(unescape(encodeURIComponent(str)));
+        var parseFile = new Parse.File(lang + ".json", {base64: str_b64});
+        return parseFile.save();
+    }
+/*
+    createFile(json) {
         var TranslationFile = Parse.Object.extend('TranslationFile');
         var fileQueryEn = new Parse.Query(TranslationFile)
-            .equalTo("lang", "cn");
+            .equalTo("lang", lang);
 
         fileQueryEn.find().then( (resp) => {
             var file = resp[0].get('file');
@@ -163,6 +170,7 @@ export class Locale extends Parse.Object {
                 (err) => console.log(err));
         });
     }
+*/
 }
 
 

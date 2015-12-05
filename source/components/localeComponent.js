@@ -166,7 +166,7 @@ var LangItem = React.createClass({
 
         return (
             <ReactBootstrap.ListGroupItem>
-                <ReactBootstrap.Grid>
+                <ReactBootstrap.Grid fluid>
                     <ReactBootstrap.Row>
 
                         <ReactBootstrap.Col xs={2} md={2}>

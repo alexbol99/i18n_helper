@@ -5,6 +5,7 @@
 import { HeaderComponent } from 'components/headerComponent';
 import { LocaleComponent } from 'components/localeComponent';
 import { UploadFilesPopup } from 'components/uploadFilesPopup';
+import { DownloadFilesPopup } from 'components/downloadFilesPopup';
 
 import { Locale } from 'models/locale';
 import { Language } from 'models/language';
@@ -20,7 +21,8 @@ export var App = React.createClass ({
         return ({
             locale: [],
             languages: new Map(),
-            importFilesPopupOpened: false
+            importFilesPopupOpened: false,
+            downloadFilesPopupOpened: false
         });
     },
     //observe: function(props, state) {
@@ -42,7 +44,7 @@ export var App = React.createClass ({
             var m = new Map();
             languages.forEach( (lang) => {
                 m.set(lang.get("iso"), true);
-            })
+            });
             this.setState({
                 languages: m
             });
@@ -67,6 +69,16 @@ export var App = React.createClass ({
             // this.hideImportFilesPopup();
         } );
     },
+    showDownloadFilesPopup() {
+        this.setState({
+            downloadFilesPopupOpened: true
+        })
+    },
+    hideDownloadFilesPopup() {
+        this.setState({
+            downloadFilesPopupOpened: false
+        })
+    },
     downloadJSON() {
         var json = {};
         localeModel.toJSON("en", locale.get('data'), null, json);
@@ -85,9 +97,9 @@ export var App = React.createClass ({
             }
         } );
     },
-    onItemSubmitted() {
-        this.forceUpdate();
-    },
+    //onItemSubmitted() {
+    //    this.forceUpdate();
+    //},
     changeLanguageDisplayed(event) {
         var m = new Map();
         this.state.languages.forEach( (checked, lang) => {
@@ -103,13 +115,22 @@ export var App = React.createClass ({
         });
     },
     render() {
+        var header = (
+            <HeaderComponent
+                onImportButtonClick = {this.showImportFilesPopup}
+                onDownloadButtonClick = {this.showDownloadFilesPopup}
+                languages = {this.state.languages}
+                onLanguageCheckboxChanged = {this.changeLanguageDisplayed}
+            />
+        );
+
         var content = this.state.locale.length > 0 && this.state.languages.size > 0 ? (
             <ReactBootstrap.Panel>
                 <LocaleComponent
                     locale = {this.state.locale}
                     languages = {this.state.languages}
                     onItemChanged = {this.onItemChanged}
-                    onItemSubmitted = {this.onItemSubmitted}
+                    onItemSubmitted = {this.forceUpdate}
                 />
             </ReactBootstrap.Panel>
         ) : (
@@ -127,17 +148,23 @@ export var App = React.createClass ({
             />
         ) : null;
 
+        var downloadPopup = this.state.downloadFilesPopupOpened ? (
+            <DownloadFilesPopup
+                locale = {this.state.locale}
+                languages = {this.state.languages}
+                showPopup = {this.state.downloadFilesPopupOpened}
+                hidePopup = {this.hideDownloadFilesPopup}
+                onFileButtonClick = {this.downloadJSON}
+            />
+        ) : null;
+
         return (
             <ReactBootstrap.Panel style={{width: '70vw', margin: 'auto'}}>
-                <HeaderComponent
-                    onImportButtonClick = {this.showImportFilesPopup}
-                    onDownloadButtonClick = {this.downloadJSON}
-                    languages = {this.state.languages}
-                    onLanguageCheckboxChanged = {this.changeLanguageDisplayed}
-                />
+                {header}
                 <br/>
                 {content}
                 {importPopup}
+                {downloadPopup}
             </ReactBootstrap.Panel>
         );
     }
