@@ -13,4 +13,25 @@ export class Language extends Parse.Object {
         var localeQuery = new Parse.Query(Language)
         return localeQuery.find();
     }
+    add(lang) {
+        var _this = this;
+        var promise = new Parse.Promise();
+
+        var query = new Parse.Query(Language)
+            .equalTo("iso", lang);
+
+        query.find().then( (resp) => {
+            if (resp.length == 0) {
+                var l = new Language();
+                l.set('iso', lang);
+                l.save().then( () => {
+                    promise.resolve();
+                });
+            }
+            else {
+                promise.resolve();
+            }
+        });
+        return promise;
+    }
 }

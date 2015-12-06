@@ -64,10 +64,13 @@ export var App = React.createClass ({
         });
     },
     uploadLocaleFile(f) {
+        var lang = f.name.split('.')[0];
         localeModel.uploadFile(f).then( (resp) => {
+            return languageModel.add(lang);
+        }).then( (resp) => {
             this.fetchData();
             // this.hideImportFilesPopup();
-        } );
+        });
     },
     showDownloadFilesPopup() {
         this.setState({
