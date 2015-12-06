@@ -100,9 +100,9 @@ export var App = React.createClass ({
             }
         } );
     },
-    //onItemSubmitted() {
-    //    this.forceUpdate();
-    //},
+    onItemSubmitted() {
+        this.forceUpdate();
+    },
     changeLanguageDisplayed(event) {
         var m = new Map();
         this.state.languages.forEach( (checked, lang) => {
@@ -133,7 +133,7 @@ export var App = React.createClass ({
                     locale = {this.state.locale}
                     languages = {this.state.languages}
                     onItemChanged = {this.onItemChanged}
-                    onItemSubmitted = {this.forceUpdate}
+                    onItemSubmitted = {this.onItemSubmitted}
                 />
             </ReactBootstrap.Panel>
         ) : (
