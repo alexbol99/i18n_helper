@@ -122,7 +122,9 @@ export class Locale extends Parse.Object {
                 newTranslationFileObject.save().then( (resp) => {
                     // Now read the file and create JSON object
                     var file = resp.get('file');
-                    loadJSON(file.url(),
+                    var index = file.url().indexOf(':');             // index of ':' after 'http'
+                    var url = "https" + file.url().slice(index);     // https://files.parsetfss.com/...
+                    loadJSON(url,
                         (json) => {
                             _this.fromJSON(lang, json, null).then( function (resp) {
                                 console.log('we are here');
