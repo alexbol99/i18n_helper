@@ -16,24 +16,31 @@ import { Language } from 'models/language';
 var localeModel = Locale.prototype;
 var languageModel = Language.prototype;
 
-export var App = React.createClass ({
-    getInitialState() {
-        return ({
+export class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             locale: [],
             languages: new Map(),
             importFilesPopupOpened: false,
             downloadFilesPopupOpened: false
-        });
-    },
-    //observe: function(props, state) {
-    //    return {
-    //        locale: (new Parse.Query(Locale))
-    //            .limit(1000)
-    //    };
-    //},
+        };
+        this.showImportFilesPopup = this.showImportFilesPopup.bind(this);
+        this.showDownloadFilesPopup = this.showDownloadFilesPopup.bind(this);
+        this.changeLanguageDisplayed = this.changeLanguageDisplayed.bind(this);
+        this.onItemChanged = this.onItemChanged.bind(this);
+        this.onItemSubmitted = this.onItemSubmitted.bind(this);
+        this.hideImportFilesPopup = this.hideImportFilesPopup.bind(this);
+        this.uploadLocaleFile = this.uploadLocaleFile.bind(this);
+        this.hideDownloadFilesPopup = this.hideDownloadFilesPopup.bind(this);
+        this.downloadJSON = this.downloadJSON.bind(this);
+
+    }
+
     componentWillMount() {
         this.fetchData();
-    },
+    }
+
     fetchData() {
         localeModel.fetch().then( (locale) => {
             this.setState({
@@ -49,20 +56,20 @@ export var App = React.createClass ({
                 languages: m
             });
         });
-    },
-    fetchLocale() {
-        var promise = new Parse.Pro
-    },
+    }
+
     showImportFilesPopup() {
         this.setState({
             importFilesPopupOpened: true
         });
-    },
+    }
+
     hideImportFilesPopup() {
         this.setState({
             importFilesPopupOpened: false
         });
-    },
+    }
+
     uploadLocaleFile(f) {
         var lang = f.name.split('.')[0];
         localeModel.uploadFile(f).then( (resp) => {
@@ -71,21 +78,25 @@ export var App = React.createClass ({
             this.fetchData();
             // this.hideImportFilesPopup();
         });
-    },
+    }
+
     showDownloadFilesPopup() {
         this.setState({
             downloadFilesPopupOpened: true
         })
-    },
+    }
+
     hideDownloadFilesPopup() {
         this.setState({
             downloadFilesPopupOpened: false
         })
-    },
+    }
+
     downloadJSON() {
         var json = {};
         localeModel.toJSON("en", locale.get('data'), null, json);
-    },
+    }
+
     onItemChanged(event) {
         var id = event.target.id;
         var lang = event.target.name;
@@ -99,10 +110,12 @@ export var App = React.createClass ({
                 record.set(lang,text);
             }
         } );
-    },
+    }
+
     onItemSubmitted() {
         this.forceUpdate();
-    },
+    }
+
     changeLanguageDisplayed(event) {
         var m = new Map();
         this.state.languages.forEach( (checked, lang) => {
@@ -116,7 +129,8 @@ export var App = React.createClass ({
         this.setState({
             languages: m
         });
-    },
+    }
+
     render() {
         var header = (
             <HeaderComponent
@@ -172,5 +186,5 @@ export var App = React.createClass ({
         );
     }
 
-});
+}
 

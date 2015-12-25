@@ -1,0 +1,14 @@
+{
+  "name": "i18_helper",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "babel --modules amd source -d out"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.0.0"
+  },
+  "babel": {
+    "presets": ["es2015", "react"],
+    "plugins": ["transform-es2015-modules-amd"]
+  }
+}
