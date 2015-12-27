@@ -10,6 +10,8 @@ import { DownloadFilesPopup } from 'components/downloadFilesPopup';
 import { Locale } from 'models/locale';
 import { Language } from 'models/language';
 
+import { OPEN_IMPORT_FILES_POPUP } from 'constants/actionTypes';
+
 //import { Parse } from '../../lib/parse-1.6.7.min';
 //Parse.initialize("MqfgDGIMgptBIgS6NqUMydGmjlXsfZaviORg4g2B","6x0jRJz3pUX4By1hzgonTMBPsCgSlpNE7kRNKxxc");
 
@@ -17,12 +19,11 @@ var localeModel = Locale.prototype;
 var languageModel = Language.prototype;
 
 export class App extends React.Component {
-    constructor(props) {
+    constructor(props, { store }) {
         super(props);
         this.state = {
             locale: [],
             languages: new Map(),
-            importFilesPopupOpened: false,
             downloadFilesPopupOpened: false
         };
         this.showImportFilesPopup = this.showImportFilesPopup.bind(this);
@@ -134,7 +135,9 @@ export class App extends React.Component {
     render() {
         var header = (
             <HeaderComponent
-                onImportButtonClick = {this.showImportFilesPopup}
+                onImportButtonClick = { () =>
+                    this.context.store.dispatch({ type: 'OPEN_IMPORT_FILES_POPUP' } )
+                 }
                 onDownloadButtonClick = {this.showDownloadFilesPopup}
                 languages = {this.state.languages}
                 onLanguageCheckboxChanged = {this.changeLanguageDisplayed}
@@ -157,9 +160,10 @@ export class App extends React.Component {
             }} />
         );
 
-        var importPopup = this.state.importFilesPopupOpened ? (
+        var importFilesPopupOpened = this.context.store.getState().importFilesPopupOpened;
+        var importPopup = importFilesPopupOpened ? (
             <UploadFilesPopup
-                showPopup = {this.state.importFilesPopupOpened}
+                showPopup = {importFilesPopupOpened}
                 hidePopup = {this.hideImportFilesPopup}
                 uploadFile = {this.uploadLocaleFile}
             />
@@ -187,4 +191,6 @@ export class App extends React.Component {
     }
 
 }
-
+App.contextTypes = {
+    store: React.PropTypes.object
+};

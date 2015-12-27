@@ -2,13 +2,22 @@
   "name": "i18_helper",
   "version": "0.0.1",
   "scripts": {
-    "build": "babel --modules amd source -d out"
+    "build": "babel --modules amd source -w -d out"
   },
   "devDependencies": {
     "babel-cli": "^6.0.0"
   },
   "babel": {
-    "presets": ["es2015", "react"],
-    "plugins": ["transform-es2015-modules-amd"]
+    "presets": [
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "transform-es2015-modules-amd"
+    ]
+  },
+  "dependencies": {
+    "react-redux": "^4.0.5",
+    "redux": "^3.0.5"
   }
 }
