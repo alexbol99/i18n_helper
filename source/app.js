@@ -21,19 +21,14 @@ var languageModel = Language.prototype;
 export class App extends React.Component {
     constructor(props, { store }) {
         super(props);
-        this.state = {
-            locale: [],
-            languages: new Map(),
-            downloadFilesPopupOpened: false
-        };
-        this.showImportFilesPopup = this.showImportFilesPopup.bind(this);
-        this.showDownloadFilesPopup = this.showDownloadFilesPopup.bind(this);
+        // this.showImportFilesPopup = this.showImportFilesPopup.bind(this);
+        // this.showDownloadFilesPopup = this.showDownloadFilesPopup.bind(this);
         this.changeLanguageDisplayed = this.changeLanguageDisplayed.bind(this);
         this.onItemChanged = this.onItemChanged.bind(this);
         this.onItemSubmitted = this.onItemSubmitted.bind(this);
-        this.hideImportFilesPopup = this.hideImportFilesPopup.bind(this);
+        // this.hideImportFilesPopup = this.hideImportFilesPopup.bind(this);
         this.uploadLocaleFile = this.uploadLocaleFile.bind(this);
-        this.hideDownloadFilesPopup = this.hideDownloadFilesPopup.bind(this);
+        // this.hideDownloadFilesPopup = this.hideDownloadFilesPopup.bind(this);
         this.downloadJSON = this.downloadJSON.bind(this);
 
     }
@@ -44,7 +39,8 @@ export class App extends React.Component {
 
     fetchData() {
         localeModel.fetch().then( (locale) => {
-            this.setState({
+            this.context.store.dispatch({
+                type: 'FETCH_LOCALE_SUCCEED',
                 locale: locale
             });
             return languageModel.fetch();
@@ -53,21 +49,10 @@ export class App extends React.Component {
             languages.forEach( (lang) => {
                 m.set(lang.get("iso"), true);
             });
-            this.setState({
+            this.context.store.dispatch({
+                type: 'FETCH_LANGUAGES_SUCCEED',
                 languages: m
             });
-        });
-    }
-
-    showImportFilesPopup() {
-        this.setState({
-            importFilesPopupOpened: true
-        });
-    }
-
-    hideImportFilesPopup() {
-        this.setState({
-            importFilesPopupOpened: false
         });
     }
 
@@ -79,18 +64,6 @@ export class App extends React.Component {
             this.fetchData();
             // this.hideImportFilesPopup();
         });
-    }
-
-    showDownloadFilesPopup() {
-        this.setState({
-            downloadFilesPopupOpened: true
-        })
-    }
-
-    hideDownloadFilesPopup() {
-        this.setState({
-            downloadFilesPopupOpened: false
-        })
     }
 
     downloadJSON() {
@@ -138,17 +111,20 @@ export class App extends React.Component {
                 onImportButtonClick = { () =>
                     this.context.store.dispatch({ type: 'OPEN_IMPORT_FILES_POPUP' } )
                  }
-                onDownloadButtonClick = {this.showDownloadFilesPopup}
-                languages = {this.state.languages}
+                onDownloadButtonClick = { () =>
+                    this.context.store.dispatch({ type: 'OPEN_DOWNLOAD_FILES_POPUP'} )
+                }
+                languages = {this.context.store.getState().languages}
                 onLanguageCheckboxChanged = {this.changeLanguageDisplayed}
             />
         );
 
-        var content = this.state.locale.length > 0 && this.state.languages.size > 0 ? (
+        var content = this.context.store.getState().locale.length > 0 &&
+                      this.context.store.getState().languages.size > 0 ? (
             <ReactBootstrap.Panel>
                 <LocaleComponent
-                    locale = {this.state.locale}
-                    languages = {this.state.languages}
+                    locale = {this.context.store.getState().locale}
+                    languages = {this.context.store.getState().languages}
                     onItemChanged = {this.onItemChanged}
                     onItemSubmitted = {this.onItemSubmitted}
                 />
@@ -164,17 +140,23 @@ export class App extends React.Component {
         var importPopup = importFilesPopupOpened ? (
             <UploadFilesPopup
                 showPopup = {importFilesPopupOpened}
-                hidePopup = {this.hideImportFilesPopup}
+                hidePopup = { () =>
+                    this.context.store.dispatch({ type: 'CLOSE_IMPORT_FILES_POPUP' })
+                }
+
                 uploadFile = {this.uploadLocaleFile}
             />
         ) : null;
 
-        var downloadPopup = this.state.downloadFilesPopupOpened ? (
+        var downloadFilesPopupOpened = this.context.store.getState().downloadFilesPopupOpened;
+        var downloadPopup = downloadFilesPopupOpened ? (
             <DownloadFilesPopup
-                locale = {this.state.locale}
-                languages = {this.state.languages}
-                showPopup = {this.state.downloadFilesPopupOpened}
-                hidePopup = {this.hideDownloadFilesPopup}
+                locale = {this.context.store.getState().locale}
+                languages = {this.context.store.getState().languages}
+                showPopup = {downloadFilesPopupOpened}
+                hidePopup = { () =>
+                    this.context.store.dispatch({ type: 'CLOSE_DOWNLOAD_FILES_POPUP'})
+                }
                 onFileButtonClick = {this.downloadJSON}
             />
         ) : null;
