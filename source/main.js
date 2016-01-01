@@ -5,13 +5,11 @@
 import { store } from 'store/configureStore';
 import { App } from 'app';
 
-const render = () => ReactDOM.render(
+ReactDOM.render(
     <ReactRedux.Provider store={store}>
         <App />
     </ReactRedux.Provider>,
     document.getElementById('app')
 );
 
-store.subscribe(render);
-render();
 
